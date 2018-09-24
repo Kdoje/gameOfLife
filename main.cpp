@@ -23,52 +23,21 @@ int main(int argc, char* argv[]){
 		bool printEachGen=false;
 		bool waitForInput=false;
 
-		manager = new BoardManager(MAXGRID, MAXGRID, inputBoard);
+		manager = new BoardManager(MAXGRID, MAXGRID, inputBoard, 5);
 		if(!manager->GetErrorCode()){
 			manager->PrintBoard();
 		}
 		else{
-			printf("the file exceeds the grid size");
+			printf("the file exceeds the grid size\n");
 			return -1;
 		}
-		//Gets the number of rows and columns from the file
-//		char nextChar= fgetc(inputBoard);
-//		int curRow=0;
-//		while(nextChar!=EOF){
-//			printf("%c", nextChar);
-//			if(nextChar=='\n'){
-//				fileCols++;
-//				curRow=0;
-//			}
-//			else if(nextChar!=' '){
-//				curRow++;
-//				if(curRow>fileRows){
-//					fileRows=curRow;
-//				}
-//			}
-//			nextChar=fgetc(inputBoard);
-//		}
-//		fileCols++;
-//		if(fileCols>MAXGRID||fileRows>MAXGRID){
-//			printf("invalid grid size\n");
-//			return -1;
-//		}
-//		if(argc>=5){
-//			printEachGen=(argv[4][0]=='y')? true:false;
-//		}
-//		if(argc==6){
-//			waitForInput=(argv[5][0]=='y')?true:false;
-//		}
-//
-//		//prints the metrics
-//		printf("\n");
-//		printf("Max Rows = %d, cols = %d ", fileRows, fileCols);
-		printf("Print gens: %d, Wait for input: %d", printEachGen, waitForInput);
-
+		printf("Print gens: %d, Wait for input: %d\n", printEachGen, waitForInput);
+		manager->PlayGeneration();
 	}
 	else{
-		printf("invalid argument count");
+		printf("invalid argument count\n");
 	}
+	printf("ending program\n");
 	return 0;
 	//how to make this all work:
 	/*

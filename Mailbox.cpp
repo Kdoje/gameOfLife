@@ -48,7 +48,6 @@ void Mailbox::ClearMsg() {
 	msgContents=NULL_CONTENTS;
 	this->iSender=EMPTY;
 }
-
 bool Mailbox::isEmpty(){
 	return(iSender==-1);
 }
