@@ -16,19 +16,21 @@
 struct contents{
 	int val1;
 	int val2;
+	int iSender;
+	int type;
 };
 typedef struct contents contents;
 const contents NULL_CONTENTS ={
 		.val1=0,
 		.val2=0,
+		.iSender=EMPTY,
+		.type=EMPTY,
 };
 
 bool operator ==(const contents& a, const contents& b);
 
 
 class Mailbox {
-	int iSender;
-	int type;
 	sem_t recSem, sendSem;
 	contents msgContents;
 	contents retval;
@@ -36,9 +38,8 @@ private:
 	void ClearMsg();
 public:
 	Mailbox();
-	void SendMsg(contents msgContents, int type, int iSender);
+	void SendMsg(contents msgContents);
 	contents RecvMsg(int iSender);
-	bool isEmpty();
 	virtual ~Mailbox();
 };
 

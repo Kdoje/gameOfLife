@@ -15,24 +15,20 @@
 #define FILE_ERROR -1
 #define NO_ERROR 0
 
-class BoardManager {
-	static Mailbox *mailbox;
-	pthread_t *threads;
+class BoardManager {;
 	char **board0;
 	char **board1;
 	int rows, cols;
 	int errorCode;
 	int boardCount, boardToPlay;
-	int threadNum;
 private:
 	void updatePlayBoard();
-	static void *playRange(void *threadid);
 public:
-	BoardManager(int rows, int cols, FILE *input, int threadNum);
+	BoardManager(int rows, int cols, FILE *input);
 	int GetErrorCode();
 	void PrintBoard();
 	void ClearBoards();
-	void PlayGeneration();
+	void PlayRange(int start, int end);
 	virtual ~BoardManager();
 };
 

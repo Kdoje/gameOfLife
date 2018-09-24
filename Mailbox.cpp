@@ -14,18 +14,14 @@ bool operator ==(const contents& a, const contents& b){
 Mailbox::Mailbox() {
 	sem_init(&recSem, 0 ,0);
 	sem_init(&sendSem, 0 ,1);
-	this->iSender=-1;
-	this->type=-1;
 	this->msgContents=NULL_CONTENTS;
 }
 
 //a thread can send a message from the get-go. But only
 //one message can be in the mailbox at a time.
-void Mailbox::SendMsg(contents msgContents, int type, int iSender){
+void Mailbox::SendMsg(contents msgContents){
 	sem_wait(&sendSem);
 	this->msgContents=msgContents;
-	this->type=type;
-	this->iSender=iSender;
 	sem_post(&recSem);
 }
 
@@ -33,24 +29,16 @@ void Mailbox::SendMsg(contents msgContents, int type, int iSender){
 //the caller read until it has a valid message
 contents Mailbox::RecvMsg(int iSender){
 	sem_wait(&recSem);
-	if(this->iSender!=EMPTY){
-		retval=msgContents;
-		ClearMsg();
-	}
-	else{
-		retval=NULL_CONTENTS;
-	}
+	retval = msgContents;
+	ClearMsg();
 	sem_post(&sendSem);
 	return retval;
 }
 
 void Mailbox::ClearMsg() {
 	msgContents=NULL_CONTENTS;
-	this->iSender=EMPTY;
 }
-bool Mailbox::isEmpty(){
-	return(iSender==-1);
-}
+
 
 Mailbox::~Mailbox() {
 	sem_destroy(&sendSem);

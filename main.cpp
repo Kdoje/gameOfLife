@@ -23,7 +23,7 @@ int main(int argc, char* argv[]){
 		bool printEachGen=false;
 		bool waitForInput=false;
 
-		manager = new BoardManager(MAXGRID, MAXGRID, inputBoard, 5);
+		manager = new BoardManager(MAXGRID, MAXGRID, inputBoard);
 		if(!manager->GetErrorCode()){
 			manager->PrintBoard();
 		}
@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
 			return -1;
 		}
 		printf("Print gens: %d, Wait for input: %d\n", printEachGen, waitForInput);
-		manager->PlayGeneration();
+		manager->PlayRange(4, 5);
 	}
 	else{
 		printf("invalid argument count\n");
