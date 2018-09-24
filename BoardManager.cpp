@@ -22,15 +22,15 @@ BoardManager::BoardManager(int rows, int cols, FILE* input) {
 	this->cols=cols;
 
 	//Gets the number of rows and columns from the file
-	int curRow = 0;
+	int curCol = 0;
 	while (nextChar != EOF) {
 		if (nextChar == '\n') {
-			fileCols++;
-			curRow = 0;
+			fileRows++;
+			curCol = 0;
 		} else if (nextChar != ' ') {
-			curRow++;
-			if (curRow > fileRows) {
-				fileRows = curRow;
+			curCol++;
+			if (curCol > fileCols) {
+				fileCols = curCol;
 			}
 		}
 		nextChar = fgetc(input);
@@ -57,9 +57,11 @@ BoardManager::BoardManager(int rows, int cols, FILE* input) {
 				boardCol=startCol;
 				boardRow++;
 			} else if (nextChar != ' ') {
-				board0[boardRow][boardCol]=nextChar;
+				board0[boardRow][boardCol] = nextChar;
+				boardCol++;
+			} else {
+				board0[boardRow][boardCol] = ' ';
 			}
-			boardCol++;
 			nextChar = fgetc(input);
 		}
 	}
@@ -80,7 +82,7 @@ void BoardManager::PrintBoard(){
 	case 1:
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				printf("%c ", board1[i][j]);
+				printf("%c", board1[i][j]);
 			}
 			printf("\n");
 		}
@@ -97,6 +99,9 @@ void BoardManager::ClearBoards(){
 		}
 	}
 }
+int BoardManager::GetErrorCode(){
+	return errorCode;
+}
 BoardManager::~BoardManager() {
 	for(int i=0; i<rows; i++){
 		free(board0[i]);
@@ -105,4 +110,6 @@ BoardManager::~BoardManager() {
 	free(board0);
 	free(board1);
 }
+
+
 

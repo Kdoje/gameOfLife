@@ -24,7 +24,13 @@ int main(int argc, char* argv[]){
 		bool waitForInput=false;
 
 		manager = new BoardManager(MAXGRID, MAXGRID, inputBoard);
-		manager->PrintBoard();
+		if(!manager->GetErrorCode()){
+			manager->PrintBoard();
+		}
+		else{
+			printf("the file exceeds the grid size");
+			return -1;
+		}
 		//Gets the number of rows and columns from the file
 //		char nextChar= fgetc(inputBoard);
 //		int curRow=0;
