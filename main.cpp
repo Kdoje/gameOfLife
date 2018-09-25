@@ -37,7 +37,7 @@ void *FindSum(void *threadid) {
 		mailbox[0].SendMsg(toSend);
 		//printf("message sent from %d\n", tid);
 	}
-	printf("thread %d is done\n", tid);
+	//printf("thread %d is done\n", tid);
 	pthread_exit(NULL);
 }
 
@@ -115,9 +115,19 @@ int main(int argc, char* argv[]){
 			toSend.iSender = 0;
 			mailbox[threadCount].SendMsg(toSend);
 			gensDone=waitForMessages(messagesNeeded);
-			manager->PrintBoard();
 			manager->UpdatePlayBoard();
-			printf("--------GEN %d---------\n", gen);
+			if(printEachGen){
+				if(waitForInput){
+					printf("enter any char to continue\n");
+					getchar();
+				}
+				manager->PrintBoard();
+				printf("--------GEN %d---------\n", gen);
+			}
+			else if (gensDone || gen == (genCount-1)) {
+				manager->PrintBoard();
+				printf("--------GEN %d---------\n", gen);
+			}
 		}
 
 		//tell the threads to finish and wait for them to close up
