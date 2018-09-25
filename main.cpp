@@ -27,11 +27,11 @@ void *FindSum(void *threadid) {
 	recieved.type=RANGE;
 	while (recieved.type != ALLDONE) {
 		recieved = mailbox[tid].RecvMsg(0);
-		printf("playing from %d to %d\n", recieved.val1, recieved.val2);
-		manager->PlayRange(recieved.val1, recieved.val2);
+		//printf("playing from %d to %d\n", recieved.val1, recieved.val2);
+		bool done =manager->PlayRange(recieved.val1, recieved.val2);
 		contents toSend;
 		toSend.iSender = tid;
-		toSend.type = NOTDONE;
+		toSend.type = (done)?ALLDONE:NOTDONE;
 		toSend.val1 = tid;
 		//printf("sending from %d\n", tid);
 		mailbox[0].SendMsg(toSend);
@@ -116,6 +116,7 @@ int main(int argc, char* argv[]){
 			mailbox[threadCount].SendMsg(toSend);
 			gensDone=waitForMessages(messagesNeeded);
 			manager->PrintBoard();
+			manager->UpdatePlayBoard();
 			printf("--------GEN %d---------\n", gen);
 		}
 
@@ -155,8 +156,10 @@ bool waitForMessages(int messagesNeeded){
 		contents msgContents;
 		msgContents = mailbox[0].RecvMsg(1);
 		//if at least one thread isn't done then make isDone false
-		isDone=!(msgContents.type==NOTDONE);
-		printf("	read message from %d\n", msgContents.iSender);
+		if(msgContents.type==NOTDONE){
+			isDone=false;
+		}
+		//printf("	read message from %d\n", msgContents.iSender);
 		messages--;
 	}
 	return isDone;

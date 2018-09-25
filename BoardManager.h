@@ -27,13 +27,13 @@ private:
 	int getNumNeighbors(int r, int c);
 	char **getCurBoard();
 	char **getNextBoard();
-	void updatePlayBoard();
 public:
 	BoardManager(int rows, int cols, FILE *input);
 	int GetErrorCode();
 	void PrintBoard();
+	void UpdatePlayBoard();
 	void ClearBoards();
-	void PlayRange(int start, int end);
+	bool PlayRange(int start, int end);
 	virtual ~BoardManager();
 };
 

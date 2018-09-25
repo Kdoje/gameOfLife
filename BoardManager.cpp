@@ -71,7 +71,6 @@ BoardManager::BoardManager(int rows, int cols, FILE* input) {
 void BoardManager::PrintBoard(){
 	//figures out which board to print then
 	//prints it out and increments the board to print
-	updatePlayBoard();
 	switch (curBoard) {
 	case 0:
 		for (int i = 0; i < rows; i++) {
@@ -105,35 +104,47 @@ int BoardManager::GetErrorCode(){
 	return errorCode;
 }
 
-void BoardManager::updatePlayBoard(){
+void BoardManager::UpdatePlayBoard(){
 	curBoard=nextBoard;
 	nextBoard+=1;
 	nextBoard=nextBoard%boardCount;
 }
 
-void BoardManager::PlayRange(int start, int end){
+bool BoardManager::PlayRange(int start, int end){
 	//TODO get this play stuff to work (possibly need function
 	//to get active board
-	char **curBoard=getCurBoard();
-	char **nextBoard=getNextBoard();
-	for(int row=start; row<end; row++){
-		for(int col=0; col<cols; col++){
-			int neighbors=getNumNeighbors(row, col);
-			if(curBoard[row][col]==CELL){
-				if(neighbors<=1||neighbors>=4){
-					nextBoard[row][col]=OPEN;
+	char **boardToRead = getCurBoard();
+	char **boardToPlay = getNextBoard();
+	int neighbors = 0;
+	bool dead=true;
+	bool done=true;
+	for (int row = start; row < end; row++) {
+		for (int col = 0; col < cols; col++) {
+			neighbors = getNumNeighbors(row, col);
+			if (boardToRead[row][col] == CELL) {
+				if (neighbors>1&&neighbors<4) {
+					boardToPlay[row][col] = CELL;
+					dead=false;
 				}
 				else{
-					nextBoard[row][col]=CELL;
+					boardToPlay[row][col]=OPEN;
 				}
 			}
 			else{
 				if(neighbors==3){
-					nextBoard[row][col]=CELL;
+					boardToPlay[row][col]=CELL;
+					dead=false;
 				}
+				else{
+					boardToPlay[row][col]=OPEN;
+				}
+			}
+			if (boardToPlay[row][col] != boardToRead[row][col] && done) {
+				done = false;
 			}
 		}
 	}
+	return (done||dead);
 }
 int BoardManager::getNumNeighbors(int r, int c){
 	//set up search bounds
@@ -154,9 +165,6 @@ int BoardManager::getNumNeighbors(int r, int c){
 	if(board[r][c]==CELL){
 		numNeighbors--;//this will accounts for the fact the cell calling
 						//is included in numNeighbors
-	}
-	if(numNeighbors>0){
-		printf("neighbors %d\n", numNeighbors);
 	}
 	return numNeighbors;
 }
