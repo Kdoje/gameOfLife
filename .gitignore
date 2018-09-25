@@ -5,3 +5,4 @@
 
 #complied things to ignore
 Debug/*
+/Debug/

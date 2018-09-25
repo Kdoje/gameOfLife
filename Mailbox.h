@@ -10,6 +10,7 @@
 
 #define RANGE 1
 #define ALLDONE 2
+#define NOTDONE 3
 #define EMPTY -1
 #include<semaphore.h>
 #include<stdlib.h>

@@ -109,7 +109,11 @@ void BoardManager::updatePlayBoard(){
 }
 
 void BoardManager::PlayRange(int start, int end){
-	printf("going from %d to %d\n", start, end);
+	for(int i=start; i<end; i++){
+		for(int j=0; j<cols; j++){
+
+		}
+	}
 }
 
 BoardManager::~BoardManager() {
