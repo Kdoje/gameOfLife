@@ -27,7 +27,7 @@ void *FindSum(void *threadid) {
 	recieved.type=RANGE;
 	while (recieved.type != ALLDONE) {
 		recieved = mailbox[tid].RecvMsg(0);
-		//printf("message for %d received\n", tid);
+		printf("playing from %d to %d\n", recieved.val1, recieved.val2);
 		manager->PlayRange(recieved.val1, recieved.val2);
 		contents toSend;
 		toSend.iSender = tid;
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]){
 		//checks that the board manager can be created
 		manager = new BoardManager(MAXGRID, MAXGRID, inputBoard);
 		if (!manager->GetErrorCode()) {
-			manager->PrintBoard();
+			printf("good to go\n");
 		} else {
 			printf("the file exceeds the grid size\n");
 			return -1;
@@ -115,6 +115,7 @@ int main(int argc, char* argv[]){
 			toSend.iSender = 0;
 			mailbox[threadCount].SendMsg(toSend);
 			gensDone=waitForMessages(messagesNeeded);
+			manager->PrintBoard();
 			printf("--------GEN %d---------\n", gen);
 		}
 

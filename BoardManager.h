@@ -14,14 +14,19 @@
 
 #define FILE_ERROR -1
 #define NO_ERROR 0
+#define CELL '1'
+#define OPEN '0'
 
 class BoardManager {;
 	char **board0;
 	char **board1;
 	int rows, cols;
 	int errorCode;
-	int boardCount, boardToPlay;
+	int boardCount, nextBoard, curBoard;
 private:
+	int getNumNeighbors(int r, int c);
+	char **getCurBoard();
+	char **getNextBoard();
 	void updatePlayBoard();
 public:
 	BoardManager(int rows, int cols, FILE *input);

@@ -10,7 +10,8 @@
 
 BoardManager::BoardManager(int rows, int cols, FILE* input) {
 	boardCount=2;
-	boardToPlay=0;
+	curBoard=0;
+	nextBoard=1;
 	char nextChar= fgetc(input);
 	int fileRows=0, fileCols=0;
 	board0=(char**)malloc(sizeof(char*)*rows);
@@ -60,7 +61,7 @@ BoardManager::BoardManager(int rows, int cols, FILE* input) {
 				board0[boardRow][boardCol] = nextChar;
 				boardCol++;
 			} else {
-				board0[boardRow][boardCol] = ' ';
+				board0[boardRow][boardCol] = OPEN;
 			}
 			nextChar = fgetc(input);
 		}
@@ -70,7 +71,8 @@ BoardManager::BoardManager(int rows, int cols, FILE* input) {
 void BoardManager::PrintBoard(){
 	//figures out which board to print then
 	//prints it out and increments the board to print
-	switch (boardToPlay) {
+	updatePlayBoard();
+	switch (curBoard) {
 	case 0:
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
@@ -93,8 +95,8 @@ void BoardManager::PrintBoard(){
 void BoardManager::ClearBoards(){
 	for(int i=0; i<rows; i++){
 		for(int j=0; j<cols; j++){
-			board0[i][j]='0';
-			board1[i][j]='0';
+			board0[i][j]=OPEN;
+			board1[i][j]=OPEN;
 		}
 	}
 }
@@ -104,16 +106,73 @@ int BoardManager::GetErrorCode(){
 }
 
 void BoardManager::updatePlayBoard(){
-	boardToPlay+=1;
-	boardToPlay=boardToPlay%boardCount;
+	curBoard=nextBoard;
+	nextBoard+=1;
+	nextBoard=nextBoard%boardCount;
 }
 
 void BoardManager::PlayRange(int start, int end){
-	for(int i=start; i<end; i++){
-		for(int j=0; j<cols; j++){
-
+	//TODO get this play stuff to work (possibly need function
+	//to get active board
+	char **curBoard=getCurBoard();
+	char **nextBoard=getNextBoard();
+	for(int row=start; row<end; row++){
+		for(int col=0; col<cols; col++){
+			int neighbors=getNumNeighbors(row, col);
+			if(curBoard[row][col]==CELL){
+				if(neighbors<=1||neighbors>=4){
+					nextBoard[row][col]=OPEN;
+				}
+				else{
+					nextBoard[row][col]=CELL;
+				}
+			}
+			else{
+				if(neighbors==3){
+					nextBoard[row][col]=CELL;
+				}
+			}
 		}
 	}
+}
+int BoardManager::getNumNeighbors(int r, int c){
+	//set up search bounds
+	char **board=getCurBoard();
+	int startRow, endRow, startCol, endCol;
+	int numNeighbors=0;
+	startRow=(r==0)?0:(r-1);
+	endRow=((r+1)>=rows)?(rows-1):r+1;
+	startCol=(c==0)?0:(c-1);
+	endCol=((c+1)>=cols)?(cols-1):c+1;
+	for(int i= startRow; i<=endRow; i++){
+		for(int j=startCol; j<=endCol; j++){
+			if(board[i][j]==CELL){
+				numNeighbors++;
+			}
+		}
+	}
+	if(board[r][c]==CELL){
+		numNeighbors--;//this will accounts for the fact the cell calling
+						//is included in numNeighbors
+	}
+	if(numNeighbors>0){
+		printf("neighbors %d\n", numNeighbors);
+	}
+	return numNeighbors;
+}
+//returns the board of the current generation
+char **BoardManager::getCurBoard(){
+	if(curBoard==1){
+		return board1;
+	}
+	return board0;
+}
+
+char **BoardManager::getNextBoard() {
+	if (nextBoard == 1) {
+		return board1;
+	}
+	return board0;
 }
 
 BoardManager::~BoardManager() {
