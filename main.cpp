@@ -9,7 +9,7 @@
 #include <math.h>
 #include "BoardManager.h"
 #include "main.h"
-const int MAXGRID=10;
+const int MAXGRID=40;
 
 BoardManager *manager;
 const int MAX_THREADS=10;
@@ -118,10 +118,15 @@ int main(int argc, char* argv[]){
 			manager->UpdatePlayBoard();
 			if(printEachGen){
 				if(waitForInput){
+					char x=0;
 					printf("enter any char to continue\n");
 					getchar();
+					getchar();
+					manager->PrintBoard();
 				}
-				manager->PrintBoard();
+				else{
+					manager->PrintBoard();
+				}
 				printf("--------GEN %d---------\n", gen);
 			}
 			else if (gensDone || gen == (genCount-1)) {
